@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migration Agent Finder</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="Script.js"></script>
+</head>
+<body>
+
+    <!-- Logo Section -->
+    <div class="logo-container">
+        <img src="images/3010.png" alt="Logo 1" class="logo">
+        <img src="images/Migrova logo.png" alt="Logo 2" class="logo">
+    </div>
+
+    <!-- Background Image Section -->
+    <div class="header-image">
+        <div class="header-text">Smart Migration Recommendation System</div>
+    </div>
+
+    <!-- Horizontal Form Section with Two Rows -->
+    <section class="main-search">
+        <div class="form-box">
+            <!-- First Row -->
+            <div class="input-group">
+                <select id="gender" aria-label="选择性别">
+                    <option value="">Please Select the Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <select id="experience" aria-label="选择经验水平">
+                    <option value="">Select Experience Level</option>
+                    <option value="beginner">Beginner (0 - 5 years)</option>
+                    <option value="intermediate">Intermediate (6 - 10 years)</option>
+                    <option value="experienced">Experienced (11 - 15 years)</option>
+                    <option value="advanced">Advanced (16 - 20 years)</option>
+                    <option value="expert">Expert (21 - 30 years)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <select id="consultation-mode" aria-label="选择咨询模式">
+                    <option value="">Please Select Consultation Mode</option>
+                    <option value="online">Online</option>
+                    <option value="face-to-face">Face to Face</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="language" placeholder="Type your preferred language" oninput="filterOptions()" onfocus="showOptions()">
+                <div id="language-options" class="dropdown" style="display: none;">
+                    <div class="option" onclick="selectOption('Arabic')">Arabic</div>
+                    <div class="option" onclick="selectOption('Bengali')">Bengali</div>
+                    <div class="option" onclick="selectOption('Cantonese')">Cantonese</div>
+                    <div class="option" onclick="selectOption('Dutch')">Dutch</div>
+                    <div class="option" onclick="selectOption('English')">English</div>
+                    <div class="option" onclick="selectOption('French')">French</div>
+                    <div class="option" onclick="selectOption('German')">German</div>
+                    <div class="option" onclick="selectOption('Greek')">Greek</div>
+                    <div class="option" onclick="selectOption('Gujarati')">Gujarati</div>
+                    <div class="option" onclick="selectOption('Hindi')">Hindi</div>
+                    <div class="option" onclick="selectOption('Indonesian')">Indonesian</div>
+                    <div class="option" onclick="selectOption('Italian')">Italian</div>
+                    <div class="option" onclick="selectOption('Japanese')">Japanese</div>
+                    <div class="option" onclick="selectOption('Javanese')">Javanese</div>
+                    <div class="option" onclick="selectOption('Kiswahili')">Kiswahili</div>
+                    <div class="option" onclick="selectOption('Korean')">Korean</div>
+                    <div class="option" onclick="selectOption('Malayalam')">Malayalam</div>
+                    <div class="option" onclick="selectOption('Mandarin')">Mandarin</div>
+                    <div class="option" onclick="selectOption('Portuguese')">Portuguese</div>
+                    <div class="option" onclick="selectOption('Punjabi')">Punjabi</div>
+                    <div class="option" onclick="selectOption('Russian')">Russian</div>
+                    <div class="option" onclick="selectOption('Spanish')">Spanish</div>
+                    <div class="option" onclick="selectOption('Swahili')">Swahili</div>
+                    <div class="option" onclick="selectOption('Swedish')">Swedish</div>
+                    <div class="option" onclick="selectOption('Tagalog')">Tagalog</div>
+                    <div class="option" onclick="selectOption('Tamil')">Tamil</div>
+                    <div class="option" onclick="selectOption('Telugu')">Telugu</div>
+                    <div class="option" onclick="selectOption('Thai')">Thai</div>
+                    <div class="option" onclick="selectOption('Turkish')">Turkish</div>
+                    <div class="option" onclick="selectOption('Urdu')">Urdu</div>
+                    <div class="option" onclick="selectOption('Vietnamese')">Vietnamese</div>
+                </div>
+            </div>
+
+            <!-- Second Row -->
+            <div class="input-group">
+                <select id="cost" aria-label="选择预算">
+                    <option value="">Select your budget</option>
+                    <option value="standard">Standard ($0 - $250)</option>
+                    <option value="moderate">Moderate ($251 - $500)</option>
+                    <option value="premium">Premium ($501+)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <select id="location" aria-label="选择首选地点">
+                    <option value="">Please Select a Location</option>
+                    <option value="Victoria">Victoria (VIC)</option>
+                    <option value="Tasmania">Tasmania (TAS)</option>
+                    <option value="Queensland">Queensland (QLD)</option>
+                    <option value="South Australia">South Australia (SA)</option>
+                    <option value="Western Australia">Western Australia (WA)</option>
+                    <option value="Northern Territory">Northern Territory (NT)</option>
+                    <option value="New South Wales">New South Wales (NSW)</option>
+                    <option value="Australian Capital Territory">Australian Capital Territory (ACT)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <select id="practice-area" aria-label="选择执业领域">
+                    <option value="">Please Select Practice Area</option>
+                    <option value="Working Visa">Working Visa</option>
+                    <option value="Tourist Visa">Tourist Visa</option>
+                    <option value="Partner Visa">Partner Visa</option>
+                    <option value="Student Visa">Student Visa</option>
+                    <option value="Permanent Residency">Permanent Residency</option>
+                    <option value="Business Visa">Business Visa</option>
+                    <option value="Skilled Visa">Skilled Visa</option>
+                </select>
+            </div>
+
+            <!-- Google Rating Group and Online Review Selection -->
+            <div class="input-group">
+                <select id="google-rating" aria-label="选择评分范围" onchange="filterByRating()">
+                    <option value="">Select Rating Range</option>
+                    <option value="1-2">Poor (0 - 2.5 Stars)</option>
+                    <option value="2-3">Average (2.5 - 3.5 Stars)</option>
+                    <option value="3-4">Good (3.5 - 4.5 Stars)</option>
+                    <option value="4-5">Excellent (4.5 - 5 Stars)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <select id="online-reviews" aria-label="选择在线评论数量">
+                    <option value="">Select Online Review Count</option>
+                    <option value="0-100">Known (0 - 100 reviews)</option>
+                    <option value="101-500">Common (101 - 500 reviews)</option>
+                    <option value="501+">Popular (501+ reviews)</option>
+                </select>
+            </div>
+
+            <p id="warning-message" style="display: none; font-weight: bold; color: darkred; margin-bottom: 10px; margin-left: 5px;"></p>
+            <button id="find-agent-button" class="btn btn-primary">Find Agent</button>
+        </div>
+    </section>
+
+    <!-- 在适当的位置添加这个 div -->
+    <div id="results-container"></div>
+
+</body>
+</html>
