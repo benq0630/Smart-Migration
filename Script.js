@@ -19,8 +19,20 @@ async function populateLanguages() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM 已加载完成");
-    initializeEventListeners();
+    const findAgentButton = document.getElementById('find-agent-button');
+    if (findAgentButton) {
+        findAgentButton.addEventListener('click', findAgent);
+    } else {
+        console.error("Find Agent button not found");
+    }
+
+    const googleRatingSelect = document.getElementById('google-rating');
+    if (googleRatingSelect) {
+        googleRatingSelect.addEventListener('change', filterByRating);
+    } else {
+        console.error("Google Rating select not found");
+    }
+
     populateLanguages();
 });
 
@@ -103,33 +115,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayResults(results) {
         const resultsContainer = document.getElementById('results-container');
-        if (!resultsContainer) {
-            console.error("Results container not found");
+        resultsContainer.innerHTML = ''; // Clear previous results
+
+        if (results.length === 0) {
+            resultsContainer.innerHTML = '<p>No matching agents found.</p>';
             return;
         }
-
-        resultsContainer.innerHTML = ''; // Clear previous results
 
         const exactMatches = results.filter(agent => agent.is_exact_match);
         const recommendedAgents = results.filter(agent => !agent.is_exact_match);
 
-        // 显示完全匹配的代理
-        const exactMatchTitle = document.createElement('h2');
-        exactMatchTitle.textContent = 'Exact Matches';
-        resultsContainer.appendChild(exactMatchTitle);
-        resultsContainer.appendChild(document.createElement('hr'));
-        
         if (exactMatches.length > 0) {
+            const exactMatchTitle = document.createElement('h2');
+            exactMatchTitle.textContent = 'Exact Matches';
+            resultsContainer.appendChild(exactMatchTitle);
+            resultsContainer.appendChild(document.createElement('hr'));
             displayAgents(exactMatches, resultsContainer);
         }
 
-        // 显示推荐的代理
-        const recommendedTitle = document.createElement('h2');
-        recommendedTitle.textContent = 'Recommended Agents';
-        resultsContainer.appendChild(recommendedTitle);
-        resultsContainer.appendChild(document.createElement('hr'));
-        
         if (recommendedAgents.length > 0) {
+            const recommendedTitle = document.createElement('h2');
+            recommendedTitle.textContent = 'Recommended Agents';
+            resultsContainer.appendChild(recommendedTitle);
+            resultsContainer.appendChild(document.createElement('hr'));
             displayAgents(recommendedAgents, resultsContainer);
         }
     }
@@ -149,15 +157,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 <br>
                 Gender: ${agent.gender}<br>
                 MARN: ${agent.marn}<br>
-                Contact: <a href="${agent.contact}" target="_blank">${agent.contact}</a><br>
-                Experience: ${agent.experience}<br>
-                Rating: ${agent.rating} stars<br>
-                Location: ${agent.location}<br>
-                Consultation Mode: ${agent.consultationMode}<br>
-                Practice Area: ${agent.practiceArea}<br>
-                Language: ${agent.language}
+                Contact: <a href="${agent.contact}" target="_blank">${agent.contact}</a>
             `;
             agentsList.appendChild(listItem);
+
+            // 在控制台输出完整信息
+            console.log(`
+                Full Name: ${agent.name}
+                Gender: ${agent.gender}
+                MARN: ${agent.marn}
+                Contact: ${agent.contact}
+                Experience: ${agent.experience}
+                Rating: ${agent.rating} stars
+                Location: ${agent.location}
+                Consultation Mode: ${agent.consultationMode}
+                Practice Area: ${agent.practiceArea}
+                Language: ${agent.language}
+                Online Review: ${agent.onlineReview}
+                Budget: ${agent.budget}
+            `);
         });
         container.appendChild(agentsList);
     }
@@ -252,7 +270,7 @@ function findAgent() {
 
     const warningElement = document.getElementById('warning-message');
 
-    // 检查是否至少填写了一个选项
+    // 检查否至少填写了一个选项
     if (!gender && !experience && !consultationMode && !cost && !location && !practiceArea && !googleRating && !onlineReviews && !language) {
         warningElement.textContent = "Please fill in at least one option before searching for an agent.";
         warningElement.style.display = 'block';
@@ -324,4 +342,90 @@ function initializeEventListeners() {
             console.error(`未找到 ${id} 元素`);
         }
     });
+}
+
+function displayResults(results) {
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.innerHTML = ''; // Clear previous results
+
+    if (results.length === 0) {
+        resultsContainer.innerHTML = '<p>No matching agents found.</p>';
+        return;
+    }
+
+    const exactMatches = results.filter(agent => agent.is_exact_match);
+    const recommendedAgents = results.filter(agent => !agent.is_exact_match);
+
+    if (exactMatches.length > 0) {
+        const exactMatchTitle = document.createElement('h2');
+        exactMatchTitle.textContent = 'Exact Matches';
+        resultsContainer.appendChild(exactMatchTitle);
+        resultsContainer.appendChild(document.createElement('hr'));
+        displayAgents(exactMatches, resultsContainer);
+    }
+
+    if (recommendedAgents.length > 0) {
+        const recommendedTitle = document.createElement('h2');
+        recommendedTitle.textContent = 'Recommended Agents';
+        resultsContainer.appendChild(recommendedTitle);
+        resultsContainer.appendChild(document.createElement('hr'));
+        displayAgents(recommendedAgents, resultsContainer);
+    }
+}
+
+function displayAgents(agents, container) {
+    const agentsList = document.createElement('ul');
+    agents.forEach(agent => {
+        const listItem = document.createElement('li');
+        const genderIcon = agent.gender.toLowerCase() === 'male' ? 'images/male-icon.webp' : 'images/female-icon.png';
+        const iconStyle = agent.gender.toLowerCase() === 'male' 
+            ? 'width: 20px; height: 20px;' 
+            : 'width: 20px; height: 25px; object-fit: contain;';
+        
+        listItem.innerHTML = `
+            <strong>${agent.name}</strong>
+            <img src="${genderIcon}" alt="${agent.gender}" style="${iconStyle} vertical-align: middle; margin-left: 5px;">
+            <br>
+            Gender: ${agent.gender}<br>
+            MARN: ${agent.marn}<br>
+            Contact: <a href="${agent.contact}" target="_blank">${agent.contact}</a>
+        `;
+        agentsList.appendChild(listItem);
+
+        // 在控制台输出完整信息
+        console.log(`
+            Full Name: ${agent.name}
+            Gender: ${agent.gender}
+            MARN: ${agent.marn}
+            Contact: ${agent.contact}
+            Experience: ${agent.experience}
+            Rating: ${agent.rating} stars
+            Location: ${agent.location}
+            Consultation Mode: ${agent.consultationMode}
+            Practice Area: ${agent.practiceArea}
+            Language: ${agent.language}
+            Online Review: ${agent.onlineReview}
+            Budget: ${agent.budget}
+        `);
+    });
+    container.appendChild(agentsList);
+}
+
+function filterByRating() {
+    findAgent();
+}
+
+function populateLanguages() {
+    fetch('/api/languages')
+        .then(response => response.json())
+        .then(languages => {
+            const languageSelect = document.getElementById('language');
+            languages.forEach(language => {
+                const option = document.createElement('option');
+                option.value = language;
+                option.textContent = language;
+                languageSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching languages:', error));
 }

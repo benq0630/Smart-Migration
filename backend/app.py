@@ -2,134 +2,64 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split, cross_val_score, RandomizedSearchCV
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import r2_score
 import traceback
-import time
+from model.train import train_model
+from model.preprocess import preprocess_data
+import os
+import logging
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 CORS(app)
 
-print("开始加载数据...")
-start_time = time.time()
+# 全局变量
+model = None
+label_encoders = None
+scaler = None
+df_synthetic = None
+df_omara = None
 
-# 读取CSV文件
-df_synthetic = pd.read_csv('Smart Project Database(Synthetic Database) .csv')
-df_omara = pd.read_csv('Smart Project Database(Omara).csv')
-
-print(f"数据加载完成，耗时 {time.time() - start_time:.2f} 秒")
-
-# 准备数据和训练模型
-def prepare_data(df):
-    print("开始准备数据...")
-    start_time = time.time()
-
-    le_dict = {}
-    categorical_columns = ['Gender', 'Language', 'Location', 'Consultation Mode', 'Practice Area']
-    for col in categorical_columns:
-        le = LabelEncoder()
-        df[col + '_encoded'] = le.fit_transform(df[col])
-        le_dict[col] = le
+def load_model():
+    global df_synthetic, df_omara, model, label_encoders, scaler
+    logging.info("Loading data and training model...")
+    df_synthetic = pd.read_csv('Smart Project Database(Synthetic Database) .csv')
+    df_omara = pd.read_csv('Smart Project Database(Omara).csv')
     
-    # 将 'Year of Experience', 'Google Rating', 'Online Review' 转换为数值型
-    df['Year of Experience'] = pd.to_numeric(df['Year of Experience'], errors='coerce')
-    df['Google Rating'] = pd.to_numeric(df['Google Rating'], errors='coerce')
-    df['Online Review'] = pd.to_numeric(df['Online Review'], errors='coerce')
+    logging.info("Data loaded. Preparing data for model training...")
+    X, label_encoders, scaler = preprocess_data(df_synthetic)
+    y = df_synthetic['Google Rating'].values
     
-    # 添加新特征
-    df['Experience_Rating_Interaction'] = df['Year of Experience'] * df['Google Rating']
+    logging.info("Data prepared. Training model...")
+    model_tuple = train_model(df_synthetic)  # 假设 train_model 返回一个元组
+    model = model_tuple[0]  # 假设模型是元组的第一个元素
     
-    feature_columns = [col + '_encoded' if col in categorical_columns else col for col in df.columns if col != 'Full_name' and col != 'Google Rating']
-    feature_columns.append('Experience_Rating_Interaction')
+    # 计算训练集和测试集分数
+    train_score = model.score(X, y)
     
-    X = df[feature_columns]
-    y = df['Google Rating']
-    
-    # 标准化数值特征
-    scaler = StandardScaler()
-    X = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
-    
-    print(f"数据准备完成，耗时 {time.time() - start_time:.2f} 秒")
-    return X, y, le_dict, feature_columns, scaler
-
-def train_model(X, y):
-    print("开始训练模型...")
-    start_time = time.time()
-
+    # 为了获取测试集分数，我们需要分割数据
+    from sklearn.model_selection import train_test_split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    test_score = model.score(X_test, y_test)
     
-    # 定义随机搜索的参数范围
-    param_distributions = {
-        'n_estimators': [50, 100, 200],
-        'max_depth': [3, 5, 7, None],
-        'min_samples_split': [2, 5, 10],
-        'min_samples_leaf': [1, 2, 4]
-    }
-    
-    model = RandomForestRegressor(random_state=42)
-    
-    # 使用随机搜索找到最佳参数
-    random_search = RandomizedSearchCV(model, param_distributions, n_iter=20, cv=5, scoring='r2', random_state=42, n_jobs=-1)
-    random_search.fit(X_train, y_train)
-    
-    best_model = random_search.best_estimator_
-    
-    # 添加特征重要性分析
-    feature_importance = pd.DataFrame({'feature': X.columns, 'importance': best_model.feature_importances_})
-    feature_importance = feature_importance.sort_values('importance', ascending=False)
-    print("Top 10 most important features:")
-    print(feature_importance.head(10))
-    
-    # 使用交叉验证
-    cv_scores = cross_val_score(best_model, X, y, cv=5, scoring='r2')
-    print(f"交叉验证分数: {cv_scores}")
-    print(f"平均交叉验证分数: {np.mean(cv_scores)}")
-    
-    best_model.fit(X_train, y_train)
-    
-    train_score = r2_score(y_train, best_model.predict(X_train))
-    test_score = r2_score(y_test, best_model.predict(X_test))
-    
-    print(f"训练集 R2 分数: {train_score}")
-    print(f"测试集 R2 分数: {test_score}")
-    
-    print(f"模型训练完成，耗时 {time.time() - start_time:.2f} 秒")
-    return best_model
+    logging.info(f"Model trained. Train R2 score: {train_score:.4f}, Test R2 score: {test_score:.4f}")
+    logging.info("Model ready for predictions.")
 
-print("开始准备数据和训练模型...")
-start_time = time.time()
-
-# 准备数据和训练模型
-X, y, label_encoders, feature_columns, scaler = prepare_data(df_synthetic)
-model = train_model(X, y)
-
-print(f"数据准备和模型训练完成，总耗时 {time.time() - start_time:.2f} 秒")
+# 在应用启动时加载模型
+load_model()
 
 @app.route('/')
 def index():
-    return send_from_directory('../', 'index.html')
+    return send_from_directory(os.path.join(app.root_path, '..'), 'index.html')
 
 @app.route('/<path:path>')
 def serve_file(path):
-    return send_from_directory('../', path)
-
-@app.route('/api/languages', methods=['GET'])
-def get_languages():
-    try:
-        languages = df_synthetic['Language'].unique().tolist()
-        print(f"Available languages: {languages}")
-        return jsonify(languages)
-    except Exception as e:
-        print(f"Error in get_languages: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+    return send_from_directory(os.path.join(app.root_path, '..'), path)
 
 @app.route('/api/filter_agents', methods=['POST'])
 def filter_agents():
     try:
         data = request.json
-        print("Received data:", data)
+        logging.info(f"Received filter request: {data}")
         
         all_agents = df_synthetic.copy()
         filtered_agents = all_agents.copy()
@@ -159,7 +89,7 @@ def filter_agents():
             filtered_agents = filtered_agents[filtered_agents['Practice Area'].str.lower() == data['practiceArea'].lower()]
         
         if data.get('language'):
-            filtered_agents = filtered_agents[filtered_agents['Language'].str.lower() == data['language'].lower()]
+            filtered_agents = filtered_agents[filtered_agents['Language'].str.lower().str.contains(data['language'].lower())]
         
         if data.get('googleRating'):
             rating_range = data['googleRating'].split('-')
@@ -167,9 +97,35 @@ def filter_agents():
             max_rating = float(rating_range[1])
             filtered_agents = filtered_agents[filtered_agents['Google Rating'].between(min_rating, max_rating)]
         
+        if data.get('onlineReviews'):
+            reviews_range = data['onlineReviews'].split('-')
+            min_reviews = int(reviews_range[0])
+            max_reviews = int(reviews_range[1])
+            filtered_agents = filtered_agents[filtered_agents['Online Review'].between(min_reviews, max_reviews)]
+        
+        if data.get('cost'):
+            cost_range = data['cost'].lower().replace('$', '').split('-')
+            if 'standard' in cost_range[0]:
+                min_cost, max_cost = 0, 250
+            elif 'premium' in cost_range[0]:
+                min_cost, max_cost = 251, 500
+            elif 'vip' in cost_range[0]:
+                min_cost, max_cost = 501, float('inf')
+            else:
+                min_cost = int(cost_range[0])
+                max_cost = int(cost_range[1]) if len(cost_range) > 1 else float('inf')
+            filtered_agents = filtered_agents[filtered_agents['Consultation Charge'].between(min_cost, max_cost)]
+        
+        logging.info(f"After filtering, {len(filtered_agents)} agents remain.")
+        
+        # 如果筛选后没有结果，返回空列表
+        if filtered_agents.empty:
+            logging.info("No exact matches found.")
+            return jsonify([])
+        
         # 对筛选后的代理进行评分预测
-        X_filtered = prepare_data_for_prediction(filtered_agents)
-        if X_filtered.shape[0] > 0:
+        X_filtered, _, _ = preprocess_data(filtered_agents)
+        if X_filtered.shape[0] > 0 and model is not None:
             filtered_agents['Predicted_Rating'] = model.predict(X_filtered)
         else:
             filtered_agents['Predicted_Rating'] = 0
@@ -179,7 +135,7 @@ def filter_agents():
         
         # 获取推荐代理（包括部分匹配和不匹配的）
         remaining_agents = all_agents[~all_agents['Full_name'].isin(exact_matches['Full_name'])]
-        X_remaining = prepare_data_for_prediction(remaining_agents)
+        X_remaining, _, _ = preprocess_data(remaining_agents)
         if X_remaining.shape[0] > 0:
             remaining_agents['Predicted_Rating'] = model.predict(X_remaining)
         else:
@@ -201,7 +157,7 @@ def filter_agents():
                 else:
                     contact_info = linkedin_url if linkedin_url else (website if website else (email if email else 'N/A'))
                 
-                results.append({
+                agent_info = {
                     'name': full_name,
                     'gender': row['Gender'],
                     'marn': omara_row['MARN'] if omara_row is not None else 'N/A',
@@ -213,8 +169,29 @@ def filter_agents():
                     'consultationMode': row['Consultation Mode'],
                     'practiceArea': row['Practice Area'],
                     'language': row['Language'],
+                    'onlineReview': int(row['Online Review']),
+                    'budget': f"${row['Consultation Charge']}",
                     'is_exact_match': is_exact_match
-                })
+                }
+                
+                results.append(agent_info)
+                
+                # 在服务器端输出详细信息
+                logging.info(f"""
+                    Full Name: {full_name}
+                    Gender: {row['Gender']}
+                    MARN: {agent_info['marn']}
+                    Contact: {contact_info}
+                    Experience: {agent_info['experience']}
+                    Rating: {agent_info['rating']} stars
+                    Location: {row['Location']}
+                    Consultation Mode: {row['Consultation Mode']}
+                    Practice Area: {row['Practice Area']}
+                    Language: {row['Language']}
+                    Online Review: {agent_info['onlineReview']}
+                    Budget: {agent_info['budget']}
+                """)
+            
             return results
 
         exact_match_results = prepare_results(exact_matches, True)
@@ -222,30 +199,21 @@ def filter_agents():
 
         all_results = exact_match_results + recommended_results
 
-        print(f"Found {len(all_results)} agents in total")
+        logging.info(f"Found {len(exact_match_results)} exact matches and {len(recommended_results)} recommended agents")
         return jsonify(all_results)
     except Exception as e:
-        print(f"Error filtering agents: {str(e)}")
-        print(traceback.format_exc())
+        logging.error(f"Error filtering agents: {str(e)}")
+        logging.error(traceback.format_exc())
         return jsonify({"error": str(e)}), 500
 
-def prepare_data_for_prediction(df):
-    # 这个函数应该与训练模型时使用的数据预处理步骤相同
-    # 例如：
-    categorical_columns = ['Gender', 'Language', 'Location', 'Consultation Mode', 'Practice Area']
-    for col in categorical_columns:
-        df[col + '_encoded'] = label_encoders[col].transform(df[col])
-    
-    df['Experience_Rating_Interaction'] = df['Year of Experience'] * df['Google Rating']
-    
-    feature_columns = [col + '_encoded' if col in categorical_columns else col for col in df.columns if col != 'Full_name' and col != 'Google Rating']
-    feature_columns.append('Experience_Rating_Interaction')
-    
-    X = df[feature_columns]
-    X_scaled = scaler.transform(X)
-    
-    return X_scaled
+@app.route('/api/languages', methods=['GET'])
+def get_languages():
+    try:
+        languages = df_synthetic['Language'].unique().tolist()
+        return jsonify(languages)
+    except Exception as e:
+        logging.error(f"Error fetching languages: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    print("启动Flask应用...")
     app.run(debug=True, port=8080)
