@@ -29,7 +29,6 @@
                     <option value="">Please Select the Gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-                    <option value="Random">Random</option>
                 </select>
             </div>
 
@@ -49,82 +48,43 @@
                     <option value="">Please Select Consultation Mode</option>
                     <option value="online">Online</option>
                     <option value="face-to-face">Face to Face</option>
-                    <option value="Hybrid">Hybrid</option>
                 </select>
             </div>
 
             <div class="input-group">
                 <input type="text" id="language" placeholder="Type your preferred language" oninput="filterOptions()" onfocus="showOptions()">
                 <div id="language-options" class="dropdown" style="display: none;">
+                    <div class="option" onclick="selectOption('Arabic')">Arabic</div>
+                    <div class="option" onclick="selectOption('Bengali')">Bengali</div>
+                    <div class="option" onclick="selectOption('Cantonese')">Cantonese</div>
+                    <div class="option" onclick="selectOption('Dutch')">Dutch</div>
                     <div class="option" onclick="selectOption('English')">English</div>
-                        <div class="option" onclick="selectOption('Dari')">Dari</div>
-                        <div class="option" onclick="selectOption('Farsi')">Farsi</div>
-                        <div class="option" onclick="selectOption('Urdu')">Urdu</div>
-                        <div class="option" onclick="selectOption('Hindi')">Hindi</div>
-                        <div class="option" onclick="selectOption('Punjabi')">Punjabi</div>
-                        <div class="option" onclick="selectOption('Chinese - Mandarin')">Chinese - Mandarin</div>
-                        <div class="option" onclick="selectOption('Chinese - Cantonese')">Chinese - Cantonese</div>
-                        <div class="option" onclick="selectOption('Arabic')">Arabic</div>
-                        <div class="option" onclick="selectOption('Spanish')">Spanish</div>
-                        <div class="option" onclick="selectOption('French')">French</div>
-                        <div class="option" onclick="selectOption('Italian')">Italian</div>
-                        <div class="option" onclick="selectOption('Portuguese')">Portuguese</div>
-                        <div class="option" onclick="selectOption('Japanese')">Japanese</div>
-                        <div class="option" onclick="selectOption('Afrikaans')">Afrikaans</div>
-                        <div class="option" onclick="selectOption('Russian')">Russian</div>
-                        <div class="option" onclick="selectOption('Serbian')">Serbian</div>
-                        <div class="option" onclick="selectOption('Czech')">Czech</div>
-                        <div class="option" onclick="selectOption('Slovak')">Slovak</div>
-                        <div class="option" onclick="selectOption('Indonesian')">Indonesian</div>
-                        <div class="option" onclick="selectOption('Thai')">Thai</div>
-                        <div class="option" onclick="selectOption('Persian')">Persian</div>
-                        <div class="option" onclick="selectOption('Sinhalese')">Sinhalese</div>
-                        <div class="option" onclick="selectOption('Nepalese')">Nepalese</div>
-                        <div class="option" onclick="selectOption('Gujarati')">Gujarati</div>
-                        <div class="option" onclick="selectOption('Filipino')">Filipino</div>
-                        <div class="option" onclick="selectOption('Tagalog')">Tagalog</div>
-                        <div class="option" onclick="selectOption('Hebrew')">Hebrew</div>
-                        <div class="option" onclick="selectOption('Swedish')">Swedish</div>
-                        <div class="option" onclick="selectOption('German')">German</div>
-                        <div class="option" onclick="selectOption('Bahasa - Indonesian')">Bahasa - Indonesian</div>
-                        <div class="option" onclick="selectOption('Polish')">Polish</div>
-                        <div class="option" onclick="selectOption('Vietnamese')">Vietnamese</div>
-                        <div class="option" onclick="selectOption('Turkish')">Turkish</div>
-                        <div class="option" onclick="selectOption('Dutch')">Dutch</div>
-                        <div class="option" onclick="selectOption('Korean')">Korean</div>
-                        <div class="option" onclick="selectOption('Tamil')">Tamil</div>
-                        <div class="option" onclick="selectOption('Ukrainian')">Ukrainian</div>
-                        <div class="option" onclick="selectOption('Malayalam')">Malayalam</div>
-                        <div class="option" onclick="selectOption('Greek')">Greek</div>
-                        <div class="option" onclick="selectOption('Chinese - Min')">Chinese - Min</div>
-                        <div class="option" onclick="selectOption('Bahasa - Malaysian')">Bahasa - Malaysian</div>
-                        <div class="option" onclick="selectOption('Chinese - Hokkien')">Chinese - Hokkien</div>
-                        <div class="option" onclick="selectOption('Chinese - Fukienese')">Chinese - Fukienese</div>
-                        <div class="option" onclick="selectOption('Pidgin')">Pidgin</div>
-                        <div class="option" onclick="selectOption('Kiswahili')">Kiswahili</div>
-                        <div class="option" onclick="selectOption('Danish')">Danish</div>
-                        <div class="option" onclick="selectOption('Bosnian')">Bosnian</div>
-                        <div class="option" onclick="selectOption('Croatian')">Croatian</div>
-                        <div class="option" onclick="selectOption('Macedonian')">Macedonian</div>
-                        <div class="option" onclick="selectOption('Montenegrin')">Montenegrin</div>
-                        <div class="option" onclick="selectOption('Romanian')">Romanian</div>
-                        <div class="option" onclick="selectOption('Albanian')">Albanian</div>
-                        <div class="option" onclick="selectOption('Swahili')">Swahili</div>
-                        <div class="option" onclick="selectOption('Hungarian')">Hungarian</div>
-                        <div class="option" onclick="selectOption('Kurdish')">Kurdish</div>
-                        <div class="option" onclick="selectOption('Magyar')">Magyar</div>
-                        <div class="option" onclick="selectOption('Fijian')">Fijian</div>
-                        <div class="option" onclick="selectOption('Lithuanian')">Lithuanian</div>
-                        <div class="option" onclick="selectOption('Cambodian')">Cambodian</div>
-                        <div class="option" onclick="selectOption('Khmer')">Khmer</div>
-                        <div class="option" onclick="selectOption('Bengali')">Bengali</div>
-                        <div class="option" onclick="selectOption('Ilokano')">Ilokano</div>
-                        <div class="option" onclick="selectOption('Norwegian')">Norwegian</div>
-                        <div class="option" onclick="selectOption('Burmese')">Burmese</div>
-                        <div class="option" onclick="selectOption('Laotian')">Laotian</div>
-                        <div class="option" onclick="selectOption('Syriac')">Syriac</div>
-                        <div class="option" onclick="selectOption('Amharic')">Amharic</div>
-                        <div class="option" onclick="selectOption('Czech')">Czech
+                    <div class="option" onclick="selectOption('French')">French</div>
+                    <div class="option" onclick="selectOption('German')">German</div>
+                    <div class="option" onclick="selectOption('Greek')">Greek</div>
+                    <div class="option" onclick="selectOption('Gujarati')">Gujarati</div>
+                    <div class="option" onclick="selectOption('Hindi')">Hindi</div>
+                    <div class="option" onclick="selectOption('Indonesian')">Indonesian</div>
+                    <div class="option" onclick="selectOption('Italian')">Italian</div>
+                    <div class="option" onclick="selectOption('Japanese')">Japanese</div>
+                    <div class="option" onclick="selectOption('Javanese')">Javanese</div>
+                    <div class="option" onclick="selectOption('Kiswahili')">Kiswahili</div>
+                    <div class="option" onclick="selectOption('Korean')">Korean</div>
+                    <div class="option" onclick="selectOption('Malayalam')">Malayalam</div>
+                    <div class="option" onclick="selectOption('Mandarin')">Mandarin</div>
+                    <div class="option" onclick="selectOption('Portuguese')">Portuguese</div>
+                    <div class="option" onclick="selectOption('Punjabi')">Punjabi</div>
+                    <div class="option" onclick="selectOption('Russian')">Russian</div>
+                    <div class="option" onclick="selectOption('Spanish')">Spanish</div>
+                    <div class="option" onclick="selectOption('Swahili')">Swahili</div>
+                    <div class="option" onclick="selectOption('Swedish')">Swedish</div>
+                    <div class="option" onclick="selectOption('Tagalog')">Tagalog</div>
+                    <div class="option" onclick="selectOption('Tamil')">Tamil</div>
+                    <div class="option" onclick="selectOption('Telugu')">Telugu</div>
+                    <div class="option" onclick="selectOption('Thai')">Thai</div>
+                    <div class="option" onclick="selectOption('Turkish')">Turkish</div>
+                    <div class="option" onclick="selectOption('Urdu')">Urdu</div>
+                    <div class="option" onclick="selectOption('Vietnamese')">Vietnamese</div>
                 </div>
             </div>
 
@@ -134,8 +94,7 @@
                     <option value="">Select your budget</option>
                     <option value="standard">Standard ($0 - $250)</option>
                     <option value="moderate">Moderate ($251 - $500)</option>
-                    <option value="premium">Premium ($501 - $750)</option>
-                    <option value="luxury">Luxury ($751 - $1000)</option>
+                    <option value="premium">Premium ($501+)</option>
                 </select>
             </div>
 
