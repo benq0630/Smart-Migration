@@ -40,27 +40,25 @@
     gap: 20px;
 }
 
-/* First Row: Agent Gender, Experience Level, Language, Consultation Mode */
+/* Input Group Styles */
 .input-group {
-    flex: 1 1 calc(25% - 20px); /* Each input takes up 25% of the container width */
+    flex: 1 1 calc(25% - 20px);
     min-width: 250px;
 }
 
-/* Second Row: Remaining Inputs (Budget, Rating, Location, Practice Area) */
+/* Second Row: Remaining Inputs */
 .input-group:nth-child(n+5) {
-    flex: 1 1 calc(33.33% - 20px); /* Each input takes up 33% of the container width */
+    flex: 1 1 calc(33.33% - 20px);
 }
 
-/* Style for Input Fields (rounded corners) */
+/* Style for Input Fields */
 .input-group select,
 .input-group input {
     width: 100%;
     padding: 12px;
-    border-radius: 10px; /* Keep the rounded corners */
+    border-radius: 10px;
     border: 2px solid #ccc;
     font-size: 16px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 .input-group select:focus,
@@ -80,22 +78,46 @@ button {
     font-size: 18px;
     cursor: pointer;
     min-width: 150px;
-    width: 100%; /* Make the button take full width */
+    width: 100%;
 }
 
 button:hover {
     background-color: #218838;
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-    .input-group {
-        flex: 1 1 100%; /* Stack input fields vertically on small screens */
-    }
+.dropdown {
+    position: absolute;
+    background-color: white;
+    border: 2px solid #ccc; /* Match input border */
+    border-radius: 10px; /* Match input border radius */
+    z-index: 1000;
+    width: 268px; /* Set a fixed width for the dropdown */
+    max-height: 200px;
+    overflow-y: auto;
+    display: none; /* Initially hidden */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-    button {
-        width: 100%; /* Full-width button on small screens */
-    }
+.option {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    font-size: 16px; /* Match option font size */
+}
+
+.option:hover {
+    background-color: #f0f0f0; /* Highlight option on hover */
+}
+
+/* Remove last border from the last option */
+.option:last-child {
+    border-bottom: none; /* Remove the last border for a cleaner look */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .input-group { /* Add responsive styles here */ }
+    button { /* Add responsive styles here */ }
 }
 
 /* Logo container and styling */
