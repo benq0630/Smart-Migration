@@ -88,12 +88,14 @@ button:hover {
 .dropdown {
     position: absolute;
     background-color: white;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc; /* Match input border */
+    border-radius: 10px; /* Match input border radius */
     z-index: 1000;
-    width: 100%;
-    max-height: 200px; /* Limit height to create scroll */
-    overflow-y: auto; /* Add scroll if content overflows */
+    width: 268px; /* Set a fixed width for the dropdown */
+    max-height: 200px;
+    overflow-y: auto;
     display: none; /* Initially hidden */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .option {
