@@ -111,25 +111,26 @@ button:hover {
     button { /* Add responsive styles here */ }
 }
 
-/* Logo container and styling */
+/* Style for the container holding both logos */
 .logo-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+    justify-content: space-between; /* Align logos on the far left and right */
+    align-items: flex-start; /* Align them to the top */
+    padding: 10px; /* Optional: Add some padding */
+    width: 100%; /* Ensure container spans full width */
 }
 
 /* Adjust Logo 1 (University of Adelaide) */
 .logo:first-of-type {
-    width: 150px; /* Fixed width for the first logo */
+    width: 100px; /* Fixed width for the first logo */
     height: auto; /* Maintain aspect ratio */
     margin-right: 20px;
 }
 
 /* Adjust Logo 2 (Migrova logo) */
 .logo:last-of-type {
-    width: auto;
-    height: 80px; /* Set a fixed height */
+    height: 60px; /* Fixed height for the second logo */
+    width: auto; /* Maintain aspect ratio */
     margin-right: 0;
 }
 
