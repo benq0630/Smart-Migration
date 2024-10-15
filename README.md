@@ -1,90 +1,59 @@
-# Smart-Migration
+# Smart Migration Recommendation System
 
-Migration agents are pivotal in assisting migrants with navigating the Australian immigration process, ensuring adherence to legal requirements and providing essential support. With a growing number of migration agents, each with varying expertise, migrants often struggle to find the most suitable agent, increasing their risk of falling victim to fraud and receiving inadequate services. To address this challenge, this project aims to develop a Machine Learning Enabled Recommendation System designed to match migrants with appropriate migration agents based on their specific needs and preferences.
-
-This project involves generating synthetic data, selecting an appropriate machine learning model, and performing rigorous training, testing, and validation to enhance the accuracy and reliability of the recommendation system.
+The Smart Migration Recommendation System is an intelligent tool designed to match migrants with appropriate migration agents based on their specific needs and preferences. This project aims to streamline the process of finding suitable migration agents in Australia, ensuring better service and reducing the risk of fraud.
 
 ## Features
 
-- Gender Filter: Filter agents based on their gender (Male/Female).
-- Experience Filter: Filter agents based on years of experience, from beginner to expert.
-- Consultation Mode: Choose between online or face-to-face consultations.
-- Language Search: Type and search for agents who speak specific languages.
-- Budget Range: Select a budget range for agent consultation fees.
-- Location Filter: Filter agents based on their location across Australian states and territories.
-- Practice Area Filter: Filter by the practice area (e.g., Working Visa, Student Visa).
-- Google Rating: Filter agents based on their Google ratings.
-- Online Reviews: Filter agents based on the number of online reviews they have received.
+- Gender Filter: Select agents based on gender preference.
+- Experience Filter: Choose agents based on their years of experience.
+- Consultation Mode: Option for online, face-to-face, or hybrid consultations.
+- Language Search: Find agents who speak specific languages.
+- Budget Range: Filter agents based on consultation fees.
+- Location Filter: Select agents from specific Australian states and territories.
+- Practice Area Filter: Find agents specializing in particular visa types.
+- Google Rating Filter: Choose agents based on their Google ratings.
+- Online Reviews Filter: Select agents based on the number of online reviews.
 
-## Requirements
+## Technology Stack
 
-- Python 3.x
-- Flask
-- pandas
-- scikit-learn
-- xgboost
-- A modern web browser (Google Chrome, Mozilla Firefox, Safari, or Microsoft Edge)
+- Frontend: HTML, CSS, JavaScript
+- Backend: Python, Flask
+- Machine Learning: XGBoost, scikit-learn
+- Database: CSV files (Smart Project Database)
 
-## Installation and Setup
+## Setup and Installation
 
-1. Clone the repository or download the project files.
-2. Install the required Python packages:
-   ```
-   pip install flask pandas scikit-learn xgboost
-   ```
-3. Run the backend server:
-   ```
-   python -m backend.app
-   ```
-4. Open index.html in your web browser to access the frontend.
+1. Clone the repository: `git clone https://github.com/benq0630/Smart-Migration.git  `
+
+2. Navigate to the project directory: `cd Smart-Migration  `
+
+3. Install the required Python packages: `pip install -r requirements.txt  `
+
+4. Run the Flask application: `python -m backend.app  `
+
+5. Open a web browser and navigate to `http://localhost:8080` to use the application.
 
 ## Project Structure
 
-- README.txt: This file, containing project information and instructions.
-- Smart Project Database(Synthetic Database) .csv: Synthetic data for migration agents.
-- Smart Project Database(Omara).csv: Additional data for migration agents.
-- Script.js: Frontend JavaScript for handling user interactions and API calls.
-- model/**init**.py: Initialization file for the model package.
-- backend/app.py: Flask application for serving the API.
-- model/preprocess.py: Data preprocessing functions.
-- model/predict.py: Functions for making predictions using the trained model.
-- model/train.py: Model training script.
-- index.html: Frontend HTML file.
+- `backend/`: Contains the Flask application and API routes.
+- `model/`: Includes machine learning model training and prediction scripts.
+- `Script.js`: Frontend JavaScript for handling user interactions.
+- `index.html`: Main HTML file for the web interface.
+- `style.css`: CSS file for styling the web interface.
+- `Smart Project Database(Synthetic Database).csv`: Dataset for migration agents.
 
-## Model Performance
+## Machine Learning Model
 
-The current implementation uses XGBoost for predictions. Based on the latest run:
+The project uses XGBoost for predicting agent ratings and recommendations. The model is trained on synthetic data and evaluated using various metrics including MSE, RMSE, R², F1 Score, Recall, Precision, and Accuracy.
 
-- Top 3 most important features:
+## Contributing
 
-  1. Year of Experience (importance: 0.394516)
-  2. Experience_Rating_Interaction (importance: 0.303158)
-  3. Experience_Rating_Interaction (importance: 0.299728)
-
-- Cross-validation scores: [0.99903891, 0.99889623, 0.99878773, 0.99897345, 0.99900837]
-- Mean CV score: 0.9989409350152407
-- Train R2 score: 0.9998589206187525
-- Test R2 score: 0.9991785762579161
-
-Note: These scores are based on synthetic data and may not reflect real-world performance. Validation with actual data is recommended.
-
-## Customization
-
-You can customize the project by modifying these files:
-
-- index.html: Modify page structure or add new elements.
-- Script.js: Modify or add new functionality to filters and interaction logic.
-- backend/app.py: Adjust API endpoints or add new features to the backend.
-- model/train.py: Modify the machine learning model or training process.
-
-## Skills Required
-
-- Machine Learning
-- Software Engineering
-- Python (e.g., Scikit-learn, TensorFlow, or PyTorch)
-- Database and Data Management
-- Statistical Analysis
+Contributions to improve the Smart Migration Recommendation System are welcome. Please feel free to submit pull requests or open issues for any bugs or feature requests.
 
 ## License
 
-This project is open-source and available for modification and distribution.
+This project is open-source and available under the [MIT License](LICENSE).
+
+## Acknowledgements
+
+Special thanks to the University of Adelaide and Migrova for their support and resources in developing this project.

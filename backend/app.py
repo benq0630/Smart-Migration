@@ -105,11 +105,16 @@ def filter_agents():
         def prepare_results(agents_df, is_recommended):
             results = []
             for _, row in agents_df.iterrows():
+                # 处理网站链接
+                website = row['Website'] if pd.notna(row['Website']) else ''
+                if website and not website.startswith(('http://', 'https://')):
+                    website = 'https://' + website
+
                 agent_info = {
                     'name': row['Full_name'],
                     'gender': row['Gender'],
                     'marn': str(row['MARN']),
-                    'contact': row['Website'] if pd.notna(row['Website']) else '',
+                    'contact': website,  # 使用处理后的网站链接
                     'experience': f"{row['Year of Experience']} years",
                     'rating': float(row['Google Rating']),
                     'location': row['Location'],

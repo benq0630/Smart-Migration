@@ -161,7 +161,7 @@ function displayAgents(agents, container, isRecommended) {
             <br>
             Gender: ${agent.gender}<br>
             MARN: ${agent.marn}<br>
-            Contact: <a href="${agent.contact}" target="_blank">${agent.contact}</a>
+            Contact: <a href="${agent.contact}" target="_blank" rel="noopener noreferrer">${agent.contact}</a>
         `;
 
         listItem.innerHTML = agentInfo;
