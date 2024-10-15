@@ -28,11 +28,14 @@ def load_model():
     y = df_synthetic['Google Rating'].values
     
     logging.info("Data prepared. Training model...")
+    logging.info("-" * 50)  # 添加分割线
     model, label_encoders, scaler = train_model(df_synthetic)
     
+    logging.info("-" * 50)  # 添加分割线
     logging.info("Model training completed.")
+    logging.info("-" * 50)  # 添加分割线
 
-# 在应用启动时加载模型
+# 在用启动时加载模型
 load_model()
 
 @app.route('/')
@@ -78,6 +81,27 @@ def filter_agents():
         if data.get('language'):
             filtered_agents = filtered_agents[filtered_agents['Language'].str.lower().str.contains(data['language'].lower())]
         
+        if data.get('googleRating'):
+            rating_range = data['googleRating'].split('-')
+            min_rating, max_rating = float(rating_range[0]), float(rating_range[1])
+        
+        if data.get('onlineReviews'):
+            reviews_range = data['onlineReviews'].split('-')
+            min_reviews = int(reviews_range[0])
+            max_reviews = int(reviews_range[1]) if reviews_range[1] != '+' else float('inf')
+        
+        if data.get('cost'):
+            cost_range = data['cost'].lower().replace('$', '').split('-')
+            if 'standard' in cost_range[0]:
+                min_cost, max_cost = 0, 250
+            elif 'premium' in cost_range[0]:
+                min_cost, max_cost = 251, 500
+            elif 'luxury' in cost_range[0]:
+                min_cost, max_cost = 751, 1000
+            else:
+                min_cost = int(cost_range[0])
+                max_cost = int(cost_range[1]) if len(cost_range) > 1 else float('inf')
+        
         def prepare_results(agents_df, is_recommended):
             results = []
             for _, row in agents_df.iterrows():
@@ -99,6 +123,33 @@ def filter_agents():
                 }
                 
                 # 检查不匹配的字段
+                if data.get('gender') and data['gender'].lower() != agent_info['gender'].lower():
+                    agent_info['mismatched_fields'].append('gender')
+                
+                if data.get('experience'):
+                    experience_mapping = {
+                        'beginner': (0, 5),
+                        'intermediate': (6, 10),
+                        'experienced': (11, 15),
+                        'advanced': (16, 20),
+                        'expert': (21, float('inf'))
+                    }
+                    min_exp, max_exp = experience_mapping.get(data['experience'].lower(), (0, float('inf')))
+                    if not (min_exp <= row['Year of Experience'] <= max_exp):
+                        agent_info['mismatched_fields'].append('experience')
+                
+                if data.get('consultationMode') and data['consultationMode'].lower() != agent_info['consultationMode'].lower():
+                    agent_info['mismatched_fields'].append('consultationMode')
+                
+                if data.get('location') and data['location'].lower() not in agent_info['location'].lower():
+                    agent_info['mismatched_fields'].append('location')
+                
+                if data.get('practiceArea') and data['practiceArea'].lower() not in agent_info['practiceArea'].lower():
+                    agent_info['mismatched_fields'].append('practiceArea')
+                
+                if data.get('language') and data['language'].lower() not in agent_info['language'].lower():
+                    agent_info['mismatched_fields'].append('language')
+                
                 if data.get('googleRating'):
                     rating_range = data['googleRating'].split('-')
                     min_rating, max_rating = float(rating_range[0]), float(rating_range[1])
@@ -107,7 +158,8 @@ def filter_agents():
                 
                 if data.get('onlineReviews'):
                     reviews_range = data['onlineReviews'].split('-')
-                    min_reviews, max_reviews = int(reviews_range[0]), int(reviews_range[1])
+                    min_reviews = int(reviews_range[0])
+                    max_reviews = int(reviews_range[1]) if reviews_range[1] != '+' else float('inf')
                     if not (min_reviews <= agent_info['onlineReview'] <= max_reviews):
                         agent_info['mismatched_fields'].append('onlineReview')
                 
@@ -117,8 +169,8 @@ def filter_agents():
                         min_cost, max_cost = 0, 250
                     elif 'premium' in cost_range[0]:
                         min_cost, max_cost = 251, 500
-                    elif 'vip' in cost_range[0]:
-                        min_cost, max_cost = 501, float('inf')
+                    elif 'luxury' in cost_range[0]:
+                        min_cost, max_cost = 751, 1000
                     else:
                         min_cost = int(cost_range[0])
                         max_cost = int(cost_range[1]) if len(cost_range) > 1 else float('inf')
@@ -134,13 +186,26 @@ def filter_agents():
         # 按照匹配程度排序
         all_results.sort(key=lambda x: len(x['mismatched_fields']))
         
-        recommended_results = all_results[:3]
-        other_results = all_results[3:6]
+        # 选择前三个推荐代理，确保不超过三个 Not Matched
+        recommended_results = []
+        other_results = []
+        not_matched_count = 0
+        
+        for agent in all_results:
+            if len(recommended_results) < 3 and not_matched_count < 3:
+                if len(agent['mismatched_fields']) > 0:
+                    not_matched_count += 1
+                recommended_results.append(agent)
+            else:
+                other_results.append(agent)
+            
+            if len(recommended_results) == 3 and len(other_results) == 3:
+                break
         
         # 如果结果不足6个，从原始数据中随机选择补充
-        if len(all_results) < 6:
-            remaining_agents = df_synthetic[~df_synthetic['Full_name'].isin([r['name'] for r in all_results])]
-            additional_results = prepare_results(remaining_agents.sample(n=min(6-len(all_results), len(remaining_agents))), False)
+        if len(recommended_results) + len(other_results) < 6:
+            remaining_agents = df_synthetic[~df_synthetic['Full_name'].isin([r['name'] for r in recommended_results + other_results])]
+            additional_results = prepare_results(remaining_agents.sample(n=min(6-len(recommended_results)-len(other_results), len(remaining_agents))), False)
             if len(recommended_results) < 3:
                 recommended_results.extend(additional_results[:3-len(recommended_results)])
                 other_results.extend(additional_results[3-len(recommended_results):])

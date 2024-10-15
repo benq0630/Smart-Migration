@@ -17,6 +17,7 @@ def train_model(df):
     logging.info(f"Training set: 70% ({X_train.shape[0]} samples)")
     logging.info(f"Test set: 20% ({X_test.shape[0]} samples)")
     logging.info(f"Accuracy evaluation set: 10% ({X_accuracy.shape[0]} samples)")
+    logging.info("-" * 50)  # 添加分割线
     
     model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42)
     model.fit(X_train, y_train)

@@ -73,6 +73,12 @@ function findAgent() {
     if (!hasSelectedOptions()) {
         warningElement.textContent = "Please fill in at least one option before searching for an agent.";
         warningElement.style.display = 'block';
+        warningElement.style.color = 'darkred';
+        warningElement.style.fontWeight = 'bold';
+        warningElement.style.position = "relative";
+        warningElement.style.right = "-340px";
+        warningElement.style.textAlign = "right";
+        warningElement.style.marginBottom = "10px";
         resultsContainer.innerHTML = ''; // 清空结果容器
         return; // 如果没有选择任何选项，直接返回
     }
@@ -155,15 +161,7 @@ function displayAgents(agents, container, isRecommended) {
             <br>
             Gender: ${agent.gender}<br>
             MARN: ${agent.marn}<br>
-            Contact: <a href="${agent.contact}" target="_blank">${agent.contact}</a><br>
-            Experience: ${agent.experience}<br>
-            Rating: ${agent.rating} stars ${agent.mismatched_fields.includes('rating') ? '(Not Matched)' : ''}<br>
-            Location: ${agent.location}<br>
-            Consultation Mode: ${agent.consultationMode}<br>
-            Practice Area: ${agent.practiceArea}<br>
-            Language: ${agent.language}<br>
-            Online Review: ${agent.onlineReview} ${agent.mismatched_fields.includes('onlineReview') ? '(Not Matched)' : ''}<br>
-            Budget: ${agent.budget} ${agent.mismatched_fields.includes('budget') ? '(Not Matched)' : ''}
+            Contact: <a href="${agent.contact}" target="_blank">${agent.contact}</a>
         `;
 
         listItem.innerHTML = agentInfo;
@@ -174,19 +172,31 @@ function displayAgents(agents, container, isRecommended) {
 Agent Type: ${isRecommended ? 'Recommended' : 'Other Option'}
 --------------------------------
 Full Name: ${agent.name}
-Gender: ${agent.gender}
+Gender: ${agent.gender} ${agent.mismatched_fields.includes('gender') ? '(Not Matched)' : ''}
 MARN: ${agent.marn}
 Contact: ${agent.contact}
-Experience: ${agent.experience}
-Rating: ${agent.rating} stars ${agent.mismatched_fields.includes('rating') ? '(Not Matched)' : ''}
-Location: ${agent.location}
-Consultation Mode: ${agent.consultationMode}
-Practice Area: ${agent.practiceArea}
-Language: ${agent.language}
+Experience: ${agent.experience} ${agent.mismatched_fields.includes('experience') ? '(Not Matched)' : ''}
+Rating: ${agent.rating.toFixed(1)} stars ${agent.mismatched_fields.includes('rating') ? '(Not Matched)' : ''}
+Location: ${agent.location} ${agent.mismatched_fields.includes('location') ? '(Not Matched)' : ''}
+Consultation Mode: ${agent.consultationMode} ${agent.mismatched_fields.includes('consultationMode') ? '(Not Matched)' : ''}
+Practice Area: ${agent.practiceArea} ${agent.mismatched_fields.includes('practiceArea') ? '(Not Matched)' : ''}
+Language: ${agent.language} ${agent.mismatched_fields.includes('language') ? '(Not Matched)' : ''}
 Online Review: ${agent.onlineReview} ${agent.mismatched_fields.includes('onlineReview') ? '(Not Matched)' : ''}
 Budget: ${agent.budget} ${agent.mismatched_fields.includes('budget') ? '(Not Matched)' : ''}
 --------------------------------
         `);
+
+        // 在 VS Code 终端输出完整信息（通过后端）
+        fetch('/api/log_agent_info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                agentType: isRecommended ? 'Recommended' : 'Other Option',
+                ...agent
+            }),
+        }).catch(error => console.error('Error logging agent info:', error));
     });
     container.appendChild(agentsList);
 }
@@ -218,6 +228,8 @@ document.addEventListener('click', function(e) {
     }
 });
 
+// 删除或注释掉这段代码
+/*
 document.getElementById('searchForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -238,6 +250,7 @@ document.getElementById('searchForm').addEventListener('submit', async function(
 
     // 其余代码保持不变...
 });
+*/
 
 async function filterAgents(filters) {
     try {
@@ -261,7 +274,12 @@ async function filterAgents(filters) {
     }
 }
 
-function filterByRating() {
-    console.log("按评分筛选");
-    findAgent(); // 调用findAgent函数来更新结果
-}
+// 删除或注释掉 filterByRating 函数
+// function filterByRating() {
+//     console.log("按评分筛选");
+//     findAgent(); // 调用findAgent函数来更新结果
+// }
+
+// 更新 index.html 中的 onchange 事件
+// 将 <select id="google-rating" aria-label="选择评分范围" onchange="filterByRating()"> 
+// 改为 <select id="google-rating" aria-label="选择评分范围">
