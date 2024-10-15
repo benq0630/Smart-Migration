@@ -17,32 +17,20 @@ model = None
 label_encoders = None
 scaler = None
 df_synthetic = None
-df_omara = None
 
 def load_model():
-    global df_synthetic, df_omara, model, label_encoders, scaler
+    global df_synthetic, model, label_encoders, scaler
     logging.info("Loading data and training model...")
-    df_synthetic = pd.read_csv('Smart Project Database(Synthetic Database) .csv')
-    df_omara = pd.read_csv('Smart Project Database(Omara).csv')
+    df_synthetic = pd.read_csv('Smart Project Database(Synthetic Database).csv')
     
     logging.info("Data loaded. Preparing data for model training...")
     X, label_encoders, scaler = preprocess_data(df_synthetic)
     y = df_synthetic['Google Rating'].values
     
     logging.info("Data prepared. Training model...")
-    model_tuple = train_model(df_synthetic)  # 假设 train_model 返回一个元组
-    model = model_tuple[0]  # 假设模型是元组的第一个元素
+    model, label_encoders, scaler = train_model(df_synthetic)
     
-    # 计算训练集和测试集分数
-    train_score = model.score(X, y)
-    
-    # 为了获取测试集分数，我们需要分割数据
-    from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    test_score = model.score(X_test, y_test)
-    
-    logging.info(f"Model trained. Train R2 score: {train_score:.4f}, Test R2 score: {test_score:.4f}")
-    logging.info("Model ready for predictions.")
+    logging.info("Model training completed.")
 
 # 在应用启动时加载模型
 load_model()
@@ -61,8 +49,7 @@ def filter_agents():
         data = request.json
         logging.info(f"Received filter request: {data}")
         
-        all_agents = df_synthetic.copy()
-        filtered_agents = all_agents.copy()
+        filtered_agents = df_synthetic.copy()
         
         # 应用筛选条件
         if data.get('gender'):
@@ -86,121 +73,91 @@ def filter_agents():
             filtered_agents = filtered_agents[filtered_agents['Location'].str.lower().str.contains(data['location'].lower())]
         
         if data.get('practiceArea'):
-            filtered_agents = filtered_agents[filtered_agents['Practice Area'].str.lower() == data['practiceArea'].lower()]
+            filtered_agents = filtered_agents[filtered_agents['Practice Area'].str.lower().str.contains(data['practiceArea'].lower())]
         
         if data.get('language'):
             filtered_agents = filtered_agents[filtered_agents['Language'].str.lower().str.contains(data['language'].lower())]
         
-        if data.get('googleRating'):
-            rating_range = data['googleRating'].split('-')
-            min_rating = float(rating_range[0])
-            max_rating = float(rating_range[1])
-            filtered_agents = filtered_agents[filtered_agents['Google Rating'].between(min_rating, max_rating)]
-        
-        if data.get('onlineReviews'):
-            reviews_range = data['onlineReviews'].split('-')
-            min_reviews = int(reviews_range[0])
-            max_reviews = int(reviews_range[1])
-            filtered_agents = filtered_agents[filtered_agents['Online Review'].between(min_reviews, max_reviews)]
-        
-        if data.get('cost'):
-            cost_range = data['cost'].lower().replace('$', '').split('-')
-            if 'standard' in cost_range[0]:
-                min_cost, max_cost = 0, 250
-            elif 'premium' in cost_range[0]:
-                min_cost, max_cost = 251, 500
-            elif 'vip' in cost_range[0]:
-                min_cost, max_cost = 501, float('inf')
-            else:
-                min_cost = int(cost_range[0])
-                max_cost = int(cost_range[1]) if len(cost_range) > 1 else float('inf')
-            filtered_agents = filtered_agents[filtered_agents['Consultation Charge'].between(min_cost, max_cost)]
-        
-        logging.info(f"After filtering, {len(filtered_agents)} agents remain.")
-        
-        # 如果筛选后没有结果，返回空列表
-        if filtered_agents.empty:
-            logging.info("No exact matches found.")
-            return jsonify([])
-        
-        # 对筛选后的代理进行评分预测
-        X_filtered, _, _ = preprocess_data(filtered_agents)
-        if X_filtered.shape[0] > 0 and model is not None:
-            filtered_agents['Predicted_Rating'] = model.predict(X_filtered)
-        else:
-            filtered_agents['Predicted_Rating'] = 0
-        
-        # 获取完全符合条件的代理
-        exact_matches = filtered_agents.sort_values('Predicted_Rating', ascending=False).head(3)
-        
-        # 获取推荐代理（包括部分匹配和不匹配的）
-        remaining_agents = all_agents[~all_agents['Full_name'].isin(exact_matches['Full_name'])]
-        X_remaining, _, _ = preprocess_data(remaining_agents)
-        if X_remaining.shape[0] > 0:
-            remaining_agents['Predicted_Rating'] = model.predict(X_remaining)
-        else:
-            remaining_agents['Predicted_Rating'] = 0
-        recommended_agents = remaining_agents.sort_values('Predicted_Rating', ascending=False).head(3)
-        
-        def prepare_results(agents_df, is_exact_match):
+        def prepare_results(agents_df, is_recommended):
             results = []
             for _, row in agents_df.iterrows():
-                full_name = row['Full_name']
-                omara_row = df_omara[df_omara['Full_name'] == full_name].iloc[0] if not df_omara[df_omara['Full_name'] == full_name].empty else None
-                
-                linkedin_url = omara_row['Linkedin URL'] if omara_row is not None and pd.notna(omara_row['Linkedin URL']) else None
-                website = omara_row['Website'] if omara_row is not None and pd.notna(omara_row['Website']) else None
-                email = omara_row['Email'] if omara_row is not None and pd.notna(omara_row['Email']) else None
-
-                if linkedin_url and full_name.lower() not in linkedin_url.lower():
-                    contact_info = website if website else (email if email else 'N/A')
-                else:
-                    contact_info = linkedin_url if linkedin_url else (website if website else (email if email else 'N/A'))
-                
                 agent_info = {
-                    'name': full_name,
+                    'name': row['Full_name'],
                     'gender': row['Gender'],
-                    'marn': omara_row['MARN'] if omara_row is not None else 'N/A',
-                    'contact': contact_info,
+                    'marn': str(row['MARN']),
+                    'contact': row['Website'] if pd.notna(row['Website']) else '',
                     'experience': f"{row['Year of Experience']} years",
                     'rating': float(row['Google Rating']),
-                    'predicted_rating': float(row['Predicted_Rating']),
                     'location': row['Location'],
                     'consultationMode': row['Consultation Mode'],
                     'practiceArea': row['Practice Area'],
                     'language': row['Language'],
                     'onlineReview': int(row['Online Review']),
                     'budget': f"${row['Consultation Charge']}",
-                    'is_exact_match': is_exact_match
+                    'is_recommended': is_recommended,
+                    'mismatched_fields': []
                 }
                 
-                results.append(agent_info)
+                # 检查不匹配的字段
+                if data.get('googleRating'):
+                    rating_range = data['googleRating'].split('-')
+                    min_rating, max_rating = float(rating_range[0]), float(rating_range[1])
+                    if not (min_rating <= agent_info['rating'] <= max_rating):
+                        agent_info['mismatched_fields'].append('rating')
                 
-                # 在服务器端输出详细信息
-                logging.info(f"""
-                    Full Name: {full_name}
-                    Gender: {row['Gender']}
-                    MARN: {agent_info['marn']}
-                    Contact: {contact_info}
-                    Experience: {agent_info['experience']}
-                    Rating: {agent_info['rating']} stars
-                    Location: {row['Location']}
-                    Consultation Mode: {row['Consultation Mode']}
-                    Practice Area: {row['Practice Area']}
-                    Language: {row['Language']}
-                    Online Review: {agent_info['onlineReview']}
-                    Budget: {agent_info['budget']}
-                """)
+                if data.get('onlineReviews'):
+                    reviews_range = data['onlineReviews'].split('-')
+                    min_reviews, max_reviews = int(reviews_range[0]), int(reviews_range[1])
+                    if not (min_reviews <= agent_info['onlineReview'] <= max_reviews):
+                        agent_info['mismatched_fields'].append('onlineReview')
+                
+                if data.get('cost'):
+                    cost_range = data['cost'].lower().replace('$', '').split('-')
+                    if 'standard' in cost_range[0]:
+                        min_cost, max_cost = 0, 250
+                    elif 'premium' in cost_range[0]:
+                        min_cost, max_cost = 251, 500
+                    elif 'vip' in cost_range[0]:
+                        min_cost, max_cost = 501, float('inf')
+                    else:
+                        min_cost = int(cost_range[0])
+                        max_cost = int(cost_range[1]) if len(cost_range) > 1 else float('inf')
+                    if not (min_cost <= row['Consultation Charge'] <= max_cost):
+                        agent_info['mismatched_fields'].append('budget')
+                
+                results.append(agent_info)
             
             return results
 
-        exact_match_results = prepare_results(exact_matches, True)
-        recommended_results = prepare_results(recommended_agents, False)
+        all_results = prepare_results(filtered_agents, True)
+        
+        # 按照匹配程度排序
+        all_results.sort(key=lambda x: len(x['mismatched_fields']))
+        
+        recommended_results = all_results[:3]
+        other_results = all_results[3:6]
+        
+        # 如果结果不足6个，从原始数据中随机选择补充
+        if len(all_results) < 6:
+            remaining_agents = df_synthetic[~df_synthetic['Full_name'].isin([r['name'] for r in all_results])]
+            additional_results = prepare_results(remaining_agents.sample(n=min(6-len(all_results), len(remaining_agents))), False)
+            if len(recommended_results) < 3:
+                recommended_results.extend(additional_results[:3-len(recommended_results)])
+                other_results.extend(additional_results[3-len(recommended_results):])
+            else:
+                other_results.extend(additional_results)
 
-        all_results = exact_match_results + recommended_results
+        # 确保每个类别都有3个结果
+        recommended_results = recommended_results[:3]
+        other_results = other_results[:3]
 
-        logging.info(f"Found {len(exact_match_results)} exact matches and {len(recommended_results)} recommended agents")
-        return jsonify(all_results)
+        final_results = {
+            'recommended_agents': recommended_results,
+            'other_agents': other_results
+        }
+
+        logging.info(f"Found {len(recommended_results)} recommended agents and {len(other_results)} other options")
+        return jsonify(final_results)
     except Exception as e:
         logging.error(f"Error filtering agents: {str(e)}")
         logging.error(traceback.format_exc())
@@ -214,6 +171,12 @@ def get_languages():
     except Exception as e:
         logging.error(f"Error fetching languages: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/log_agent_info', methods=['POST'])
+def log_agent_info():
+    data = request.json
+    logging.info(f"Agent Info: {data}")
+    return jsonify({"status": "success"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
