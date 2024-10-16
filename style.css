@@ -138,8 +138,10 @@ button:hover {
 
 /* 结果容器样式 */
 #results-container {
-    margin-top: 30px;
-    padding: 20px;
+    margin: 30px auto;
+    padding: 20px 40px;
+    max-width: 1200px;
+    width: 90%;
     background-color: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -165,11 +167,13 @@ button:hover {
 
 .agent-item {
     display: flex;
+    flex-wrap: wrap;
     margin-bottom: 30px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    padding: 20px;
 }
 
 .agent-profile {
@@ -177,6 +181,8 @@ button:hover {
     padding: 20px;
     background-color: #f1f3f5;
     text-align: center;
+    border-radius: 8px;
+    margin-right: 20px;
 }
 
 .profile-image {
@@ -196,11 +202,24 @@ button:hover {
 .agent-details {
     flex: 1;
     padding: 20px;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.agent-details strong {
-    font-size: 1.2em;
-    color: #343a40;
+.agent-details .name-and-gender {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+.agent-details .name-and-gender strong {
+    margin-right: 10px;
+    font-size: 1.3em;
+    color: #2c3e50;
 }
 
 .agent-details p {
@@ -213,17 +232,56 @@ button:hover {
     font-weight: bold;
 }
 
+.connect-button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 10px 0 0 0;
+    width: 100%;
+}
+
 .contact-link {
     display: inline-block;
-    margin-top: 10px;
-    padding: 5px 10px;
+    padding: 10px 20px;
     background-color: #28a745;
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    font-size: 0.9em;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
 }
 
 .contact-link:hover {
     background-color: #218838;
+}
+
+@media (max-width: 768px) {
+    .agent-item {
+        flex-direction: column;
+    }
+
+    .agent-profile {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .agent-details, .connect-button-container {
+        width: 100%;
+    }
+
+    .connect-button-container {
+        justify-content: center;
+        padding-top: 20px;
+    }
+}
+
+.gender-icon {
+    width: auto;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.gender-icon[src*="female-icon.png"] {
+    height: 25px;
 }

@@ -114,7 +114,7 @@ def filter_agents():
                     'name': row['Full_name'],
                     'gender': row['Gender'],
                     'marn': str(row['MARN']),
-                    'contact': website,  # 使��处理后的网站链接
+                    'contact': website,  # 使处理后的网站链接
                     'experience': f"{row['Year of Experience']} years",
                     'rating': float(row['Google Rating']),
                     'location': row['Location'],
@@ -127,7 +127,7 @@ def filter_agents():
                     'mismatched_fields': []
                 }
                 
-                # 检查不匹配的字段
+                # Check for gender mismatch
                 if data.get('gender') and data['gender'].lower() != agent_info['gender'].lower():
                     agent_info['mismatched_fields'].append('gender')
                 

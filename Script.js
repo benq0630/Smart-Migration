@@ -151,6 +151,7 @@ function displayAgents(agents, container, isRecommended) {
         listItem.className = 'agent-item';
         
         const profileImage = agent.gender.toLowerCase().includes('female') ? 'female profile.webp' : 'male profile.webp';
+        const genderIcon = agent.gender.toLowerCase().includes('female') ? 'female-icon.png' : 'male-icon.webp';
         
         let agentInfo = `
             <div class="agent-profile">
@@ -158,8 +159,11 @@ function displayAgents(agents, container, isRecommended) {
                 <div class="marn">${agent.marn}</div>
             </div>
             <div class="agent-details">
-                <strong>${agent.name}</strong>
-                <p>Gender: ${agent.gender}</p>
+                <div class="name-and-gender">
+                    <strong>${agent.name}</strong>
+                    <img src="images/${genderIcon}" alt="${agent.gender}" class="gender-icon">
+                </div>
+                <p>Gender: ${agent.gender} ${agent.mismatched_fields.includes('gender') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
                 <p>Experience: ${agent.experience} ${agent.mismatched_fields.includes('experience') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
                 <p>Rating: ${agent.rating.toFixed(1)} stars ${agent.mismatched_fields.includes('rating') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
                 <p>Location: ${agent.location} ${agent.mismatched_fields.includes('location') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
@@ -168,6 +172,8 @@ function displayAgents(agents, container, isRecommended) {
                 <p>Language: ${agent.language} ${agent.mismatched_fields.includes('language') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
                 <p>Online Review: ${agent.onlineReview} ${agent.mismatched_fields.includes('onlineReview') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
                 <p>Budget: ${agent.budget} ${agent.mismatched_fields.includes('budget') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+            </div>
+            <div class="connect-button-container">
                 <a href="${agent.contact}" target="_blank" rel="noopener noreferrer" class="contact-link">Connect</a>
             </div>
         `;
