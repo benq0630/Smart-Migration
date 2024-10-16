@@ -1,2 +1,9 @@
 .DS_Store
 __pycache__
+test.py
+Google Rating.csv
+google_ratings_boxplot.png
+google_ratings_histogram.png
+google_ratings_pie_chart.png
+valid_google_ratings_histogram.png
+analyze_google_rating.py

@@ -12,44 +12,41 @@ async function populateLanguages() {
                     languageSelect.appendChild(option);
                 });
             } else {
-                console.error("未找到语言选择框");
+                console.error("Language selection box not found");
             }
         })
-        .catch(error => console.error('获取语言列表时出错:', error));
+        .catch(error => console.error('Error getting language list:', error));
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM 已加载完成");
+    console.log("DOM fully loaded");
     initializeEventListeners();
     populateLanguages();
 });
 
 function initializeEventListeners() {
-    console.log("初始化事件监听器");
+    console.log("Initializing event listeners");
     const findAgentButton = document.getElementById('find-agent-button');
     if (findAgentButton) {
-        console.log("找到 Find Agent 按钮");
+        console.log("Find Agent button found");
         findAgentButton.addEventListener('click', findAgent);
     } else {
-        console.error("未找到 Find Agent 按钮");
+        console.error("Find Agent button not found");
     }
 
-    // 移除对 filterByRating 的引用
     const googleRatingSelect = document.getElementById('google-rating');
     if (googleRatingSelect) {
-        console.log("找到 Google Rating 选择框");
-        // 移除这一行: googleRatingSelect.addEventListener('change', filterByRating);
+        console.log("Google Rating select box found");
     } else {
-        console.error("未找到 Google Rating 选择框");
+        console.error("Google Rating select box not found");
     }
 
-    // 检查其他重要元素
     ['gender', 'experience', 'consultation-mode', 'cost', 'location', 'practice-area', 'language', 'online-reviews'].forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            console.log(`找到 ${id} 元素`);
+            console.log(`${id} element found`);
         } else {
-            console.error(`未找到 ${id} 元素`);
+            console.error(`${id} element not found`);
         }
     });
 }
@@ -148,33 +145,43 @@ function displayResults(results) {
 
 function displayAgents(agents, container, isRecommended) {
     const agentsList = document.createElement('ul');
+    agentsList.className = 'agents-list';
     agents.forEach(agent => {
         const listItem = document.createElement('li');
-        const genderIcon = agent.gender.toLowerCase().includes('female') ? 'images/female-icon.png' : 'images/male-icon.webp';
-        const iconStyle = agent.gender.toLowerCase().includes('female') 
-            ? 'width: 20px; height: 25px; object-fit: contain; vertical-align: middle; margin-left: 5px;'
-            : 'width: 20px; height: 20px; vertical-align: middle; margin-left: 5px;';
+        listItem.className = 'agent-item';
+        
+        const profileImage = agent.gender.toLowerCase().includes('female') ? 'female profile.webp' : 'male profile.webp';
         
         let agentInfo = `
-            <strong>${agent.name}</strong>
-            <img src="${genderIcon}" alt="${agent.gender}" style="${iconStyle}">
-            <br>
-            Gender: ${agent.gender}<br>
-            MARN: ${agent.marn}<br>
-            Contact: <a href="${agent.contact}" target="_blank" rel="noopener noreferrer">${agent.contact}</a>
+            <div class="agent-profile">
+                <img src="images/${profileImage}" alt="${agent.gender} Profile" class="profile-image">
+                <div class="marn">${agent.marn}</div>
+            </div>
+            <div class="agent-details">
+                <strong>${agent.name}</strong>
+                <p>Gender: ${agent.gender}</p>
+                <p>Experience: ${agent.experience} ${agent.mismatched_fields.includes('experience') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+                <p>Rating: ${agent.rating.toFixed(1)} stars ${agent.mismatched_fields.includes('rating') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+                <p>Location: ${agent.location} ${agent.mismatched_fields.includes('location') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+                <p>Consultation Mode: ${agent.consultationMode} ${agent.mismatched_fields.includes('consultationMode') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+                <p>Practice Area: ${agent.practiceArea} ${agent.mismatched_fields.includes('practiceArea') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+                <p>Language: ${agent.language} ${agent.mismatched_fields.includes('language') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+                <p>Online Review: ${agent.onlineReview} ${agent.mismatched_fields.includes('onlineReview') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+                <p>Budget: ${agent.budget} ${agent.mismatched_fields.includes('budget') ? '<span class="not-matched">(Not Matched)</span>' : ''}</p>
+                <a href="${agent.contact}" target="_blank" rel="noopener noreferrer" class="contact-link">Connect</a>
+            </div>
         `;
 
         listItem.innerHTML = agentInfo;
         agentsList.appendChild(listItem);
 
-        // 在浏览器控制台输出完整信息
         console.log(`
 Agent Type: ${isRecommended ? 'Recommended' : 'Other Option'}
 --------------------------------
 Full Name: ${agent.name}
 Gender: ${agent.gender} ${agent.mismatched_fields.includes('gender') ? '(Not Matched)' : ''}
 MARN: ${agent.marn}
-Contact: ${agent.contact}
+Connect: ${agent.contact}
 Experience: ${agent.experience} ${agent.mismatched_fields.includes('experience') ? '(Not Matched)' : ''}
 Rating: ${agent.rating.toFixed(1)} stars ${agent.mismatched_fields.includes('rating') ? '(Not Matched)' : ''}
 Location: ${agent.location} ${agent.mismatched_fields.includes('location') ? '(Not Matched)' : ''}
@@ -185,18 +192,6 @@ Online Review: ${agent.onlineReview} ${agent.mismatched_fields.includes('onlineR
 Budget: ${agent.budget} ${agent.mismatched_fields.includes('budget') ? '(Not Matched)' : ''}
 --------------------------------
         `);
-
-        // 在 VS Code 终端输出完整信息（通过后端）
-        fetch('/api/log_agent_info', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                agentType: isRecommended ? 'Recommended' : 'Other Option',
-                ...agent
-            }),
-        }).catch(error => console.error('Error logging agent info:', error));
     });
     container.appendChild(agentsList);
 }
@@ -228,30 +223,6 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// 删除或注释掉这段代码
-/*
-document.getElementById('searchForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const formData = {
-        gender: document.getElementById('gender').value,
-        experience: document.getElementById('experience').value,
-        language: document.getElementById('language').value,
-        location: document.getElementById('location').value,
-        // 添加以下字段
-        consultation_charge: document.getElementById('consultation_charge')?.value || '',
-        consultation_mode: document.getElementById('consultation_mode')?.value || '',
-        practice_area: document.getElementById('practice_area')?.value || '',
-        google_rating: document.getElementById('google_rating')?.value || '',
-        online_review: document.getElementById('online_review')?.value || ''
-    };
-
-    console.log('Form data:', formData);
-
-    // 其余代码保持不变...
-});
-*/
-
 async function filterAgents(filters) {
     try {
         const response = await fetch('http://localhost:8080/api/filter_agents', {
@@ -273,13 +244,3 @@ async function filterAgents(filters) {
         throw error;
     }
 }
-
-// 删除或注释掉 filterByRating 函数
-// function filterByRating() {
-//     console.log("按评分筛选");
-//     findAgent(); // 调用findAgent函数来更新结果
-// }
-
-// 更新 index.html 中的 onchange 事件
-// 将 <select id="google-rating" aria-label="选择评分范围" onchange="filterByRating()"> 
-// 改为 <select id="google-rating" aria-label="选择评分范围">
