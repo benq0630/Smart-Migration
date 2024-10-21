@@ -35,7 +35,7 @@ def load_model():
     logging.info("Model training completed.")
     logging.info("-" * 50)  # 添加分割线
 
-# 在用启动时加载模型
+# 在���启动时加载模型
 load_model()
 
 @app.route('/')
