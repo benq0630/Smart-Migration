@@ -9,14 +9,12 @@ def train_model(df):
     X, label_encoders, scaler = preprocess_data(df)
     y = df['Google Rating'].values
     
-    # Split the dataset
-    X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
-    X_test, X_accuracy, y_test, y_accuracy = train_test_split(X_temp, y_temp, test_size=0.33, random_state=42)
+    # Split the dataset: 90% training, 10% testing
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
     
     logging.info("Dataset split proportions:")
-    logging.info(f"Training set: 70% ({X_train.shape[0]} samples)")
-    logging.info(f"Test set: 20% ({X_test.shape[0]} samples)")
-    logging.info(f"Accuracy evaluation set: 10% ({X_accuracy.shape[0]} samples)")
+    logging.info(f"Training set: 90% ({X_train.shape[0]} samples)")
+    logging.info(f"Test set: 10% ({X_test.shape[0]} samples)")
     logging.info("-" * 50)  # 添加分割线
     
     model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42)
@@ -59,14 +57,6 @@ def train_model(df):
     logging.info(f"Recall: {recall:.4f}")
     logging.info(f"Precision: {precision:.4f}")
     logging.info(f"Accuracy: {accuracy:.4f}")
-    
-    # Evaluate the model on the accuracy evaluation set
-    y_pred_accuracy = model.predict(X_accuracy)
-    y_pred_accuracy_rounded = np.round(y_pred_accuracy)
-    y_accuracy_rounded = np.round(y_accuracy)
-    accuracy_on_accuracy_set = accuracy_score(y_accuracy_rounded, y_pred_accuracy_rounded)
-    
-    logging.info(f"Accuracy on the accuracy evaluation set: {accuracy_on_accuracy_set:.4f}")
     logging.info("-" * 50)  # 添加分割线
     
     return model, label_encoders, scaler
