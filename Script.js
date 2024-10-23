@@ -64,22 +64,18 @@ function hasSelectedOptions() {
 }
 
 function findAgent() {
+    const genderSelect = document.getElementById('gender');
     const warningElement = document.getElementById('warning-message');
     const resultsContainer = document.getElementById('results-container');
 
     if (!hasSelectedOptions()) {
-        warningElement.textContent = "Please fill in at least one option before searching for an agent.";
-        warningElement.style.display = 'block';
-        warningElement.style.color = 'darkred';
-        warningElement.style.fontWeight = 'bold';
-        warningElement.style.position = "relative";
-        warningElement.style.right = "-340px";
-        warningElement.style.textAlign = "right";
-        warningElement.style.marginBottom = "10px";
+        genderSelect.style.border = '2px solid red';
+        warningElement.style.display = 'none';
         resultsContainer.innerHTML = ''; // 清空结果容器
         return; // 如果没有选择任何选项，直接返回
     }
 
+    genderSelect.style.border = ''; // 重置边框样式
     warningElement.style.display = 'none'; // 隐藏警告消息
 
     const gender = document.getElementById('gender').value;

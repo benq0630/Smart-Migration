@@ -35,7 +35,7 @@ def load_model():
     logging.info("Model training completed.")
     logging.info("-" * 50)  # 添加分割线
 
-# 在���启动时加载模型
+# 在启动时加载模型
 load_model()
 
 @app.route('/')
@@ -249,4 +249,5 @@ def log_agent_info():
     return jsonify({"status": "success"}), 200
 
 if __name__ == '__main__':
+    print("Server is running. Please visit: http://localhost:8080/")
     app.run(debug=True, port=8080)
