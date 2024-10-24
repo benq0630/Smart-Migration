@@ -170,21 +170,21 @@ style.css: Holds styles for the web page.
 
 ## Usage Tips
 
-Configure MySQL Access: Ensure your MySQL username and password are correct, and create the filter database using the intermediary.sql script.
+- Configure MySQL Access: Ensure your MySQL username and password are correct, and create the filter database using the intermediary.sql script.
 
-Data and Privacy: Before deploying the app in a production environment, ensure your data is secured by changing the database user credentials and adding proper data validation.
+- Data and Privacy: Before deploying the app in a production environment, ensure your data is secured by changing the database user credentials an-d adding proper data validation.
 
-Edit Passwords: Edit the database password in intermediary.js to match your local setup.
+- Edit Passwords: Edit the database password in intermediary.js to match your local setup.
 
 ## FAQ
 
-Why do I need to import intermediary.sql?
+1. Why do I need to import intermediary.sql?
 
-This SQL file contains the migration agents' information required for filtering. You need it to populate the database with the necessary data to run this application.
+- This SQL file contains the migration agents' information required for filtering. You need it to populate the database with the necessary data to run this application.
 
-How do I change the database password?
+2. How do I change the database password?
 
-Open intermediary.js and replace the password under the database configuration object.
+- Open intermediary.js and replace the password under the database configuration object.
 
 ## License
 
