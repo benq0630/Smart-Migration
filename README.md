@@ -76,37 +76,36 @@ For a complete list of dependencies and their versions, please refer to the `req
 
 
 
-# Migration Agent Finder (Rule-Based Filtering Approach)
+##Migration Agent Finder (Rule-Based Filtering Approach)
 
-# Overview
+##Overview
 
-= The Migration Agent Finder is a simple rule-based filtering system that helps users find migration agents based on their preferences. This project uses a MySQL database to store data about agents, such as their gender, experience level, consultation mode, cost, location, and other    
-  attributes. It then filters these agents based on the user's input to recommend suitable migration agents. This README will guide you through setting up the project and running it on your local machine.
+The Migration Agent Finder is a simple rule-based filtering system that helps users find migration agents based on their preferences. This project uses a MySQL database to store data about agents, such as their gender, experience level, consultation mode, cost, location, and other attributes. It then filters these agents based on the user's input to recommend suitable migration agents. This README will guide you through setting up the project and running it on your local machine.
 
-# Features
+##Features
 
-- Select preferences: Users can filter migration agents by gender, experience level, consultation mode, budget, location, practice area, language, Google rating, and online reviews.
+Select preferences: Users can filter migration agents by gender, experience level, consultation mode, budget, location, practice area, language, Google rating, and online reviews.
 
-- View Results: The top recommended migration agents are displayed based on the user's preferences.
+View Results: The top recommended migration agents are displayed based on the user's preferences.
 
-# Prerequisites
+##Prerequisites
 
-- Node.js (v14.0.0 or higher)
+Node.js (v14.0.0 or higher)
 
-- MySQL server
+MySQL server
 
-- npm (included with Node.js)
+npm (included with Node.js)
 
-# Installation Guide
+Installation Guide
 
-- Step 1: Clone or Download the Project
+###Step 1: Clone or Download the Project
 
-- Download or clone the repository to your local machine.
+Download or clone the repository to your local machine.
 
 $ git clone <repository_url>
 $ cd migration-agent-finder
 
-Step 2: Install Dependencies
+###Step 2: Install Dependencies
 
 Install all necessary dependencies by running the following command:
 
@@ -120,7 +119,7 @@ mysql2: For MySQL database connectivity
 
 cors, cookie-parser, express-session, morgan: Middleware packages for various purposes
 
-Step 3: MySQL Database Setup
+###Step 3: MySQL Database Setup
 
 Start your MySQL server and create a new database called filter.
 
@@ -132,7 +131,7 @@ $ mysql -u root -p filter < intermediary.sql
 
 Make sure to replace root with your MySQL username and filter with the database name.
 
-Step 4: Edit Database Configuration
+###Step 4: Edit Database Configuration
 
 In intermediary.js (located under the routes folder), change the database credentials to match your local MySQL setup:
 
@@ -145,7 +144,7 @@ const connection = mysql.createConnection({
 
 Replace your_mysql_username and your_mysql_password accordingly.
 
-Step 5: Start the Application
+###Step 5: Start the Application
 
 Use the following command to start the server:
 
@@ -153,11 +152,11 @@ $ npm start
 
 By default, the application runs on http://127.0.0.1:3000.
 
-Step 6: Access the Web Interface
+###Step 6: Access the Web Interface
 
 Open your browser and visit http://127.0.0.1:3000/index.html to interact with the Migration Agent Finder.
 
-Project Structure
+##Project Structure
 
 app.js: Main entry point for the application, handles all middleware setup and routing.
 
@@ -169,7 +168,7 @@ public/: Contains static assets including HTML, CSS, JavaScript files.
 
 style.css: Holds styles for the web page.
 
-Usage Tips
+##Usage Tips
 
 Configure MySQL Access: Ensure your MySQL username and password are correct, and create the filter database using the intermediary.sql script.
 
@@ -177,7 +176,7 @@ Data and Privacy: Before deploying the app in a production environment, ensure y
 
 Edit Passwords: Edit the database password in intermediary.js to match your local setup.
 
-FAQ
+##FAQ
 
 Why do I need to import intermediary.sql?
 
@@ -187,6 +186,6 @@ How do I change the database password?
 
 Open intermediary.js and replace the password under the database configuration object.
 
-License
+##License
 
 MIT License.
