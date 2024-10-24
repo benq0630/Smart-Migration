@@ -186,7 +186,3 @@ Open your browser and visit http://127.0.0.1:3000/index.html to interact with th
 2. How do I change the database password?
 
    Open intermediary.js and replace the password under the database configuration object.
-
-## License
-
-MIT License.
