@@ -71,18 +71,7 @@ Special thanks to the University of Adelaide and Migrova for their support in de
 - scikit-learn: 0.24.2
 - XGBoost: 1.4.2
 
-For a complete list of dependencies and their versions, please refer to the `requirements.txt` file.
-
-
-
-
-
-
-
-
-
-
-
+For a complete list of dependencies and their versions, please refer to the `requirements.txt` file.<br><br><br>
 
 
 
