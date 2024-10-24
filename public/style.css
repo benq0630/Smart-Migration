@@ -1,0 +1,321 @@
+/* General Box Sizing */
+* {
+    box-sizing: border-box;
+}
+
+/* Background Image for the Top Section */
+.header-image {
+    background: url('images/background.jpg') no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    border-radius: 25px; /* Rounded corners */
+    overflow: hidden; /* Keep image within the border radius */
+}
+
+/* Style for text over the background image */
+.header-text {
+    text-align: center;
+    color: white;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+/* Form Box Styles */
+.form-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+    margin: -100px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 0; /* Remove top margins that may have existed before */
+}
+
+/* Input Group Styles */
+.input-group {
+    flex: 1 1 calc(25% - 20px);
+    min-width: 250px;
+}
+
+/* Second Row: Remaining Inputs */
+.input-group:nth-child(n+5) {
+    flex: 1 1 calc(33.33% - 20px);
+}
+
+/* Style for Input Fields */
+.input-group select,
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    font-size: 16px;
+}
+
+.input-group select:focus,
+.input-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+/* Style for the Submit Button */
+button {
+    background-color: #28a745;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    min-width: 150px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.dropdown {
+    position: absolute;
+    background-color: white;
+    border: 2px solid #ccc; /* Match input border */
+    border-radius: 10px; /* Match input border radius */
+    z-index: 1000;
+    width: 268px; /* Set a fixed width for the dropdown */
+    max-height: 200px;
+    overflow-y: auto;
+    display: none; /* Initially hidden */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: #f0f0f0; /* Highlight option on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    /* 
+    .input-group {
+        // Future responsive styles here
+    }
+    
+    button {
+        // Future responsive styles here
+    } 
+    */
+}
+
+/* Style for the container holding both logos */
+.logo-container {
+    display: flex;
+    justify-content: space-between; /* Align logos on the far left and right */
+    align-items: flex-start; /* Align them to the top */
+    padding: 10px; /* Optional: Add some padding */
+    width: 100%; /* Ensure container spans full width */
+}
+
+/* Adjust Logo 1 (University of Adelaide) */
+.logo:first-of-type {
+    width: 100px; /* Fixed width for the first logo */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 20px;
+}
+
+/* Adjust Logo 2 (Migrova logo) */
+.logo:last-of-type {
+    height: 60px; /* Fixed height for the second logo */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: 0;
+}
+
+/* 结果容器样式 */
+#results-container {
+    margin: 30px auto;
+    padding: 20px 40px;
+    max-width: 1200px;
+    width: 90%;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#results-container h2 {
+    color: #007bff;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+#results-container hr {
+    border: 0;
+    height: 2px;
+    background-color: #007bff;
+    margin-bottom: 20px;
+}
+
+.agents-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.agent-item {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+}
+
+.agent-profile {
+    width: 150px;
+    padding: 20px;
+    background-color: #f1f3f5;
+    text-align: center;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+}
+
+.marn {
+    font-size: 0.9em;
+    margin-top: 10px;
+    color: #6c757d;
+}
+
+.agent-details {
+    flex: 1;
+    padding: 20px;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.agent-details .name-and-gender {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+.agent-details .name-and-gender strong {
+    margin-right: 10px;
+    font-size: 1.3em;
+    color: #2c3e50;
+}
+
+.agent-details p {
+    margin: 5px 0;
+    color: #495057;
+}
+
+.not-matched {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.connect-button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 10px 0 0 0;
+    width: 100%;
+}
+
+.contact-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+.contact-link:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 768px) {
+    .agent-item {
+        flex-direction: column;
+    }
+
+    .agent-profile {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .agent-details, .connect-button-container {
+        width: 100%;
+    }
+
+    .connect-button-container {
+        justify-content: center;
+        padding-top: 20px;
+    }
+}
+
+.gender-icon {
+    width: auto;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.gender-icon[src*="female-icon.png"] {
+    height: 25px;
+}
+
+.form-title {
+    text-align: center;
+    color: black;
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.main-search {
+    margin-top: 20px; /* Add the top margin to keep some distance from the title */
+}
+.btnShow{
+    margin-top: 10px;
+    margin: 30px auto;
+    max-width: 1200px;
+    width: 90%;
+    display: flex; align-items: center;
+}
+#selectId{
+    width: 30%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    font-size: 16px;
+}
