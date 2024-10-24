@@ -102,8 +102,10 @@ Installation Guide
 
 Download or clone the repository to your local machine.
 
-`$ git clone <repository_url>
- $ cd migration-agent-finder `
+```sh
+$ git clone <repository_url>
+$ cd migration-agent-finder
+```
 
 ### Step 2: Install Dependencies
 
@@ -134,14 +136,14 @@ Make sure to replace root with your MySQL username and filter with the database 
 ### Step 4: Edit Database Configuration
 
 In intermediary.js (located under the routes folder), change the database credentials to match your local MySQL setup:
-
-`const connection = mysql.createConnection({
+```sh
+const connection = mysql.createConnection({
     host: 'localhost', // Database host
     user: 'your_mysql_username', // Database username
     password: 'your_mysql_password', // Database password
     database: 'filter' // Database name
-}); `
-
+}); 
+```
 Replace your_mysql_username and your_mysql_password accordingly.
 
 ### Step 5: Start the Application
