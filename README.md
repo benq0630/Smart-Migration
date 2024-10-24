@@ -84,17 +84,17 @@ The Migration Agent Finder is a simple rule-based filtering system that helps us
 
 ## Features
 
-Select preferences: Users can filter migration agents by gender, experience level, consultation mode, budget, location, practice area, language, Google rating, and online reviews.
+- Select preferences: Users can filter migration agents by gender, experience level, consultation mode, budget, location, practice area, language, Google rating, and online reviews.
 
-View Results: The top recommended migration agents are displayed based on the user's preferences.
+- View Results: The top recommended migration agents are displayed based on the user's preferences.
 
 ## Prerequisites
 
-Node.js (v14.0.0 or higher)
+- Node.js (v14.0.0 or higher)
 
-MySQL server
+- MySQL server
 
-npm (included with Node.js)
+- npm (included with Node.js)
 
 Installation Guide
 
@@ -113,19 +113,19 @@ $ npm install
 
 This command will install the following key dependencies:
 
-express: Node.js web application framework
+- express: Node.js web application framework
 
-mysql2: For MySQL database connectivity
+- mysql2: For MySQL database connectivity
 
-cors, cookie-parser, express-session, morgan: Middleware packages for various purposes
+- cors, cookie-parser, express-session, morgan: Middleware packages for various purposes
 
 ### Step 3: MySQL Database Setup
 
-Start your MySQL server and create a new database called filter.
+1. Start your MySQL server and create a new database called filter.
 
 CREATE DATABASE filter;
 
-Import the intermediary.sql file into your database. This script contains the structure of the consultants table and pre-filled data that you need for the agent filtering process.
+2. Import the intermediary.sql file into your database. This script contains the structure of the consultants table and pre-filled data that you need for the agent filtering process.
 
 $ mysql -u root -p filter < intermediary.sql
 
@@ -158,23 +158,23 @@ Open your browser and visit http://127.0.0.1:3000/index.html to interact with th
 
 ## Project Structure
 
-app.js: Main entry point for the application, handles all middleware setup and routing.
+- app.js: Main entry point for the application, handles all middleware setup and routing.
 
-routes/index.js: Manages homepage routes.
+- routes/index.js: Manages homepage routes.
 
-routes/intermediary.js: Manages API requests, particularly for searching agents.
+- routes/intermediary.js: Manages API requests, particularly for searching agents.
 
-public/: Contains static assets including HTML, CSS, JavaScript files.
+- public/: Contains static assets including HTML, CSS, JavaScript files.
 
-style.css: Holds styles for the web page.
+- style.css: Holds styles for the web page.
 
 ## Usage Tips
 
-- Configure MySQL Access: Ensure your MySQL username and password are correct, and create the filter database using the intermediary.sql script.
+1. Configure MySQL Access: Ensure your MySQL username and password are correct, and create the filter database using the intermediary.sql script.
 
-- Data and Privacy: Before deploying the app in a production environment, ensure your data is secured by changing the database user credentials an-d adding proper data validation.
+2. Data and Privacy: Before deploying the app in a production environment, ensure your data is secured by changing the database user credentials an-d adding proper data validation.
 
-- Edit Passwords: Edit the database password in intermediary.js to match your local setup.
+3. Edit Passwords: Edit the database password in intermediary.js to match your local setup.
 
 ## FAQ
 
