@@ -102,14 +102,14 @@ Installation Guide
 
 Download or clone the repository to your local machine.
 
-$ git clone <repository_url>
-$ cd migration-agent-finder
+`$ git clone <repository_url>
+ $ cd migration-agent-finder `
 
 ### Step 2: Install Dependencies
 
 Install all necessary dependencies by running the following command:
 
-$ npm install
+`$ npm install `
 
 This command will install the following key dependencies:
 
@@ -123,11 +123,11 @@ This command will install the following key dependencies:
 
 1. Start your MySQL server and create a new database called filter.
 
-CREATE DATABASE filter;
+`CREATE DATABASE filter; `
 
 2. Import the intermediary.sql file into your database. This script contains the structure of the consultants table and pre-filled data that you need for the agent filtering process.
 
-$ mysql -u root -p filter < intermediary.sql
+`$ mysql -u root -p filter < intermediary.sql `
 
 Make sure to replace root with your MySQL username and filter with the database name.
 
@@ -135,12 +135,12 @@ Make sure to replace root with your MySQL username and filter with the database 
 
 In intermediary.js (located under the routes folder), change the database credentials to match your local MySQL setup:
 
-const connection = mysql.createConnection({
+`const connection = mysql.createConnection({
     host: 'localhost', // Database host
     user: 'your_mysql_username', // Database username
     password: 'your_mysql_password', // Database password
     database: 'filter' // Database name
-});
+}); `
 
 Replace your_mysql_username and your_mysql_password accordingly.
 
@@ -148,7 +148,7 @@ Replace your_mysql_username and your_mysql_password accordingly.
 
 Use the following command to start the server:
 
-$ npm start
+`$ npm start `
 
 By default, the application runs on http://127.0.0.1:3000.
 
