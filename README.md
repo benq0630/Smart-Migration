@@ -180,11 +180,11 @@ style.css: Holds styles for the web page.
 
 1. Why do I need to import intermediary.sql?
 
-This SQL file contains the migration agents' information required for filtering. You need it to populate the database with the necessary data to run this application.
+ This SQL file contains the migration agents' information required for filtering. You need it to populate the database with the necessary data to run this application.
 
 2. How do I change the database password?
 
-Open intermediary.js and replace the password under the database configuration object.
+ Open intermediary.js and replace the password under the database configuration object.
 
 ## License
 
