@@ -104,7 +104,7 @@ Download or clone the repository to your local machine.
 
 ```sh
 $ git clone <repository_url>
-$ cd migration-agent-finder
+$ cd Smart-Migration-main
 ```
 
 ### Step 2: Install Dependencies
