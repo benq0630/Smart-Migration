@@ -76,31 +76,32 @@ For a complete list of dependencies and their versions, please refer to the `req
 
 
 
-Migration Agent Finder (Rule-Based Filtering Approach)
+# Migration Agent Finder (Rule-Based Filtering Approach)
 
-Overview
+# Overview
 
-The Migration Agent Finder is a simple rule-based filtering system that helps users find migration agents based on their preferences. This project uses a MySQL database to store data about agents, such as their gender, experience level, consultation mode, cost, location, and other attributes. It then filters these agents based on the user's input to recommend suitable migration agents. This README will guide you through setting up the project and running it on your local machine.
+= The Migration Agent Finder is a simple rule-based filtering system that helps users find migration agents based on their preferences. This project uses a MySQL database to store data about agents, such as their gender, experience level, consultation mode, cost, location, and other    
+  attributes. It then filters these agents based on the user's input to recommend suitable migration agents. This README will guide you through setting up the project and running it on your local machine.
 
-Features
+# Features
 
-Select preferences: Users can filter migration agents by gender, experience level, consultation mode, budget, location, practice area, language, Google rating, and online reviews.
+- Select preferences: Users can filter migration agents by gender, experience level, consultation mode, budget, location, practice area, language, Google rating, and online reviews.
 
-View Results: The top recommended migration agents are displayed based on the user's preferences.
+- View Results: The top recommended migration agents are displayed based on the user's preferences.
 
-Prerequisites
+# Prerequisites
 
-Node.js (v14.0.0 or higher)
+- Node.js (v14.0.0 or higher)
 
-MySQL server
+- MySQL server
 
-npm (included with Node.js)
+- npm (included with Node.js)
 
-Installation Guide
+# Installation Guide
 
-Step 1: Clone or Download the Project
+- Step 1: Clone or Download the Project
 
-Download or clone the repository to your local machine.
+- Download or clone the repository to your local machine.
 
 $ git clone <repository_url>
 $ cd migration-agent-finder
